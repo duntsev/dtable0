@@ -1,0 +1,49 @@
+table.table-dtable tbody tr {
+  cursor: pointer;
+}
+
+/* Модальное окно Настроить колонки - Подсветка в поиске колонок */
+.dTableSelectColumnsModal .highlight {
+  color: #b10048;
+  background-color: antiquewhite;
+}
+
+.dTableSelectColumnsModal .list-group {
+  padding-left: 0.75rem;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.dTableSelectColumnsModal .dTableColumn {
+  padding: 2px;
+  color: #454545;
+}
+
+/* .dTableSelectColumnsModal .columns-selected .dTableColumn:before {
+  content: "→";
+  color: #999999;
+  position: absolute;
+  right: -16px;
+  z-index: -1;
+  transition: all 2.6s ease;
+}
+.dTableSelectColumnsModal .columns-other .dTableColumn:before {
+  content: "←";
+  color: #999999;
+  position: absolute;
+  left: -16px;
+  z-index: -1;
+  transition: all 2.6s ease;
+} */
+
+/* доп.скролл */
+.dtable-scroll{
+  position: fixed;
+  bottom: 0;
+  overflow-x: auto;
+  height: 0;
+}
+.dtable-scroll .dtable-scroll-inner{
+  height: 1px;
+}
+/* --доп.скролл */
