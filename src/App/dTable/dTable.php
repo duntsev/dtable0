@@ -1,7 +1,7 @@
 <?php
-namespace YourVendorName\YourPackageName;
+namespace App\dTable;
  
-class HelloWorld
+class dTable
 {
     public function greet(string $name): string
     {
