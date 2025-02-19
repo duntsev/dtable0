@@ -1,5 +1,5 @@
 <?php
-namespace App\dTable;
+namespace dTable;
  
 /**
  * Класс для создания HTML разметки таблицы dTable
