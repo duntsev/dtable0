@@ -7,7 +7,7 @@
     },
     "autoload": {
         "psr-4": {
-            "dTable\\": "src"
+            "dTable\\": "src/Class"
         }
     }
     
