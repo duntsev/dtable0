@@ -31,8 +31,10 @@ class dTable {
     private $trAttributes = array(); // Массив атрибутов для tr
     private $tdAHref = ''; // Ссылка для каждой ячейки, кроме кнопок
     private $tableClassList = ''; // Список классов для тэга <table> разделённый пробелами
+    private $additionalColumns = array(); // Массив дополнительных колонок для строки таблицы
     private $actionsUrl = ''; // Ссылка для страницы с массовыми операциями
     private $actions = []; // Массив для массовых операций
+    private $styles = []; // Массив стилей для отрисовки элементов таблицы
   
     /**
      * @param array $data Массив
@@ -69,6 +71,13 @@ class dTable {
      * где attrName - атрибут который будет создан у tr
      * где fieldName - название поля из запроса которое будет значением атрибута. Это поле должно быть в запросе в SELECT
      * tdAHref string Ссылка для каждой ячейки, кроме кнопок
+     * additionalColumns array Массив строк. Отображается в конце таблицы в виде дополнительных колонок
+     * Пример: 
+     * array(
+     *  '<button class="some-action">Нажми меня</button>',
+     *  '<a class="ms-1" href="/ModerAchievementBak/CheckAchievement?applicationId={ID}"><i class="fa fa-pencil pe-2">Проверить ИД</i></a>'
+     * )
+     * В результате добавятся 2 ячейки с переданным содержимым для одной строки
      */
     function __construct($modulUrl, $data, $buttons, $params = array()) {
       $this->modulUrl = $modulUrl;
@@ -82,8 +91,10 @@ class dTable {
       $this->trAttributes = isset($params['trAttributes']) ? (array)$params['trAttributes'] : array();
       $this->tdAHref = isset($params['tdAHref']) ? (string)$params['tdAHref'] : '';
       $this->tableClassList = isset($params['tableClassList']) ? (string)$params['tableClassList'] : '';
+      $this->additionalColumns = isset($params['additionalColumns']) ? (array)$params['additionalColumns'] : array();
       $this->actionsUrl = isset($params['actionsUrl']) ? (string)$params['actionsUrl'] : '';
       $this->actions = isset($params['actions']) ? (array)$params['actions'] : [];
+      $this->styles = isset($params['styles']) ? (array)$params['styles'] : [];
     }
   
     /**
@@ -120,13 +131,13 @@ class dTable {
           if ($fieldForView['type'] === 'fSelect') {
             foreach ($fieldForView['filterTitleFull'] as $filterTitleFull) {
               echo '<a class="p-1 removeFilterItemElement" href="#" data-id="' . $filterTitleFull['ID'] . '">';
-              echo '<span class="badge rounded-pill text-bg-success">' . $filterTitleFull['NAME'] . ' <i class="feather-x"></i></span>';
+              echo '<span class="badge rounded-pill text-bg-success">' . $filterTitleFull['NAME'] . ' <i class="'.$this->styles['iClassX'].'"></i></span>';
               echo '</a>';
             }
           }
           if ($fieldForView['type'] === 'fText') {
             echo '<a href="#" class="removeFilterItemElement">';
-            echo '<span class="badge rounded-pill text-bg-success">' . $fieldForView['filterTitleFull'] . ' <i class="feather-x"></i></span>';
+            echo '<span class="badge rounded-pill text-bg-success">' . $fieldForView['filterTitleFull'] . ' <i class="'.$this->styles['iClassX'].'"></i></span>';
             echo '</a>';
           }
           if ($fieldForView['type'] === 'fDateInterval') {
@@ -139,7 +150,7 @@ class dTable {
             if (isset($fieldForView['filterTitleFull'][1])) {
               echo $fieldForView['filterTitleFull'][1];
             }
-            echo ' <i class="feather-x-circle"></i>';
+            echo ' <i class="'.$this->styles['iClassX'].'"></i>';
             echo '</span>';
             echo '</a>';
           }
@@ -159,9 +170,9 @@ class dTable {
       <div class="d-flex py-1">
   
         <div class="selected-rows input-group input-group-sm my-1" style="width:auto;display:none">
-          <!-- <button class="btn btn-outline-secondary" type="button"><i class="feather-x"></i></button> -->
+          <!-- <button class="btn btn-outline-secondary" type="button"><i class="<?php //echo $this->styles['iClassX']; ?>"></i></button> -->
           <label class="input-group-text" for="">
-          <a class="" href="#" title="Сбросить"><i class="feather-x pe-1 btn-reset"></i></a>
+          <a class="" href="#" title="Сбросить"><i class="<?php echo $this->styles['iClassX']; ?> pe-1 btn-reset"></i></a>
             Отмечено строк: <span class="selected-rows-count ps-1"></span>
           </label>
           <label class="input-group-text" for="">Действия для отмеченных</label>
@@ -180,7 +191,7 @@ class dTable {
         </div>
   
         <a class="SelectColumns ms-auto" href="#">
-          Настроить <i class="align-middle feather-settings"></i>
+          Настроить <i class="<?php echo $this->styles['iClassSettings']; ?>"></i>
         </a>
       </div>
       <div class="table-responsive">
@@ -208,6 +219,12 @@ class dTable {
                 echo '<a href="#" class="table-head-title text-decoration-none" data-name="' . $fieldForView['name'] . '" ' . $ord . '>' . $fieldForView['title'] . $ord_icon . '</a>';
                 echo '</th>';
               }
+              if (!empty($this->additionalColumns)) {
+                foreach ($this->additionalColumns as $addColumn) {
+                  echo '<td>';
+                  echo '</td>';
+                }
+              }
               ?>
             </tr>
             <tr>
@@ -234,15 +251,22 @@ class dTable {
                     . 'data-filter-value="' . $fieldForView['filterValue'] . '" '
                     . 'data-filter-title="' . $fieldForView['filterTitle'] . '">';
                   if (empty($fieldForView['filterTitle'])) {
-                    echo '<i class="align-middle feather-filter"></i>';
+                    echo '<i class="'.$this->styles['iClassFilter'].'"></i>';
                   } else {
-                    echo '<i class="align-middle feather-filter text-success"></i>';
+                    echo '<i class="'.$this->styles['iClassFilter'].' text-success"></i>';
                   }
                   echo '</a>';
                 } else {
                   echo '&nbsp;';  // Чтобы строка не слопнулась если нет ни одного фильтра
                 }
                 echo '</th>';
+              }
+
+              if (!empty($this->additionalColumns)) {
+                foreach ($this->additionalColumns as $addColumn) {
+                  echo '<td>';
+                  echo '</td>';
+                }
               }
               ?>
   
@@ -300,6 +324,14 @@ class dTable {
                 }
                 echo '</td>';
               }
+
+              if (!empty($this->additionalColumns)) {
+                foreach ($this->additionalColumns as $addColumn) {
+                  echo '<td>';
+                  echo $this->urlParamsReplace($addColumn, $row);
+                  echo '</td>';
+                }
+              }
               echo '</tr>';
             }
             ?>
@@ -327,12 +359,12 @@ class dTable {
         <ul class="pagination pagination-sm m-0 me-4 my-2">
           <li class="page-item <?php if ($data["page"] == 1) echo "disabled"; ?>">
             <a class="page-link" data-page="1" title="1" href="#" aria-label="First">
-              <i class="align-middle feather-chevrons-left"></i>
+              <i class="<?php echo $this->styles['iClassFirst']; ?>"></i>
             </a>
           </li>
           <li class="page-item <?php if ($data["page"] == 1) echo "disabled"; ?>">
             <a class="page-link" data-page="<?php echo ($data["page"] - 1); ?>" title="<?php echo ($data["page"] - 1); ?>" href="#" aria-label="Previous">
-              <i class="align-middle feather-chevron-left"></i>
+              <i class="<?php echo $this->styles['iClassPrev']; ?>"></i>
             </a>
           </li>
           <?php
@@ -347,17 +379,17 @@ class dTable {
           <?php endforeach; ?>
           <li class="page-item <?php if ($data["page"] == $last_page) echo "disabled"; ?>">
             <a class="page-link" data-page="<?php echo ($data["page"] + 1); ?>" title="<?php echo ($data["page"] + 1); ?>" href="#" aria-label="Next">
-              <i class="align-middle feather-chevron-right"></i>
+              <i class="<?php echo $this->styles['iClassNext']; ?>"></i>
             </a>
           </li>
           <li class="page-item <?php if ($data["page"] == $last_page) echo "disabled"; ?>">
             <a class="page-link" data-page="<?php echo $pages["count"]; ?>" title="<?php echo $pages["count"]; ?>" href="#" aria-label="Last">
-              <i class="align-middle feather-chevrons-right"></i>
+              <i class="<?php echo $this->styles['iClassLast']; ?>"></i>
             </a>
           </li>
         </ul>
         <select name="row_count" class="form-select select_row_count me-4 my-2" style="width: 200px;">
-          <?php foreach (array(10, 20, 50, 100, 200, 1000, 2000, 5000) as $i) : ?>
+          <?php foreach (array(10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000) as $i) : ?>
             <option <?php if ($i == $page_row_count) echo "selected"; ?> value="<?php echo $i; ?>">По <?php echo $i; ?> на странице</option>
           <?php endforeach; ?>
         </select>
@@ -365,7 +397,7 @@ class dTable {
         <div class="">Всего строк: <?php echo $data['row_count']; ?></div>
         <div class="" style="margin-left:auto">
           <?php if ($this->isExportXlsShowButton) : ?>
-            <button class="btn btn-success btn-to-xls"><i class="feather-external-link pe-1"></i>Экспорт в xlsx</button>
+            <button class="btn btn-success btn-to-xls"><i class="<?php echo $this->styles['iClassExternalLink']; ?>"></i>Экспорт в xlsx</button>
           <?php endif; ?>
         </div>
       </nav>
