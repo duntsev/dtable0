@@ -126,7 +126,7 @@ class dTable {
             // возможны случаи, когда установленный filterValue будет отсутствовать 
             // среди возможных значений. В этом случае нам надо всё равно показать,
             // что фильтр задан, хотя он и будет пустой
-          echo '<div class="filterItem" data-name="' . $fieldForView['name'] . '" data-type="' . $fieldForView['type'] . '">';
+          echo '<div class="filterItem lh-lg" data-name="' . $fieldForView['name'] . '" data-type="' . $fieldForView['type'] . '">';
           echo $fieldForView['title'] .'<a href="#" class="ps-1 text-muted inline-block removeFilterItem" title="Очистить фильтр"><i class="fa fa-times"></i></a>'. ': ';
           if ($fieldForView['type'] === 'fSelect') {
             foreach ($fieldForView['filterTitleFull'] as $filterTitleFull) {
@@ -167,7 +167,7 @@ class dTable {
       $countButtons = count($buttons);
   ?>
   
-      <div class="d-flex py-1">
+      <div class="d-flex py-1 dTableActions">
   
         <div class="selected-rows input-group input-group-sm my-1" style="width:auto;display:none">
           <!-- <button class="btn btn-outline-secondary" type="button"><i class="<?php //echo $this->styles['iClassX']; ?>"></i></button> -->
@@ -355,7 +355,7 @@ class dTable {
       $page_row_count = $data["page_row_count"];
   
     ?>
-      <nav class="d-flex flex-wrap" style="align-items: center;" aria-label="Page navigation example">
+      <nav class="d-flex flex-wrap dTableNav" style="align-items: center;" aria-label="Page navigation example">
         <ul class="pagination pagination-sm m-0 me-4 my-2">
           <li class="page-item <?php if ($data["page"] == 1) echo "disabled"; ?>">
             <a class="page-link" data-page="1" title="1" href="#" aria-label="First">
