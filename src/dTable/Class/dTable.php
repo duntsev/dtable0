@@ -167,7 +167,7 @@ class dTable {
       $countButtons = count($buttons);
   ?>
   
-      <div class="d-flex py-1 dTableActions">
+      <div class="d-flex align-items-center py-1 dTableActions">
   
         <div class="selected-rows input-group input-group-sm my-1" style="width:auto;display:none">
           <!-- <button class="btn btn-outline-secondary" type="button"><i class="<?php //echo $this->styles['iClassX']; ?>"></i></button> -->
